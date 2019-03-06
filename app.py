@@ -13,7 +13,7 @@ import tensorflow as tf
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-modelpath = 'transfull_06.model'
+modelpath = 'fullset.model'
 
 
 with open('config.json') as config:
@@ -86,8 +86,8 @@ def upload():
 
     # Change the attrs for image to fit the model
     print('[INFO] Resizing face image')
-    face = cv2.resize(face, (224, 224))
-    # face = cv2.resize(face, (128, 128))
+    # face = cv2.resize(face, (224, 224))
+    face = cv2.resize(face, (128, 128))
     face = face.astype("float") / 255.0
     face = img_to_array(face)
     face = np.expand_dims(face, axis=0)
