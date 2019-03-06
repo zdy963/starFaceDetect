@@ -23,6 +23,12 @@
         }
     </style>
     <script type="text/javascript">
+        $(document).read(function () {
+            let width = $(window).width();
+            let height = $(window).height();
+            $('.center').width(width)
+                .height(height);
+        })
         function uploadFile() {
             $('#sbm_btn').removeAttr('disabled');
         }
