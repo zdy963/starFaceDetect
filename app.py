@@ -13,7 +13,7 @@ import tensorflow as tf
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-modelpath = 'transfull.model'
+modelpath = 'transfull_06.model'
 
 
 with open('config.json') as config:
