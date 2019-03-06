@@ -73,6 +73,7 @@ def upload():
 
     # Change it into opencv form
     image = cv2.imdecode(np.fromstring(img, np.uint8), 1)
+    image = cv2.pyrDown(image)
 
     # Copy an output
     output = image.copy()
