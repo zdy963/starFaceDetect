@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        .center{
+            text-align: center; /*让div内部文字居中*/
+            background-color: #fff;
+            border-radius: 2px;
+            width: 100px;
+            height: 150px;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
     <script type="text/javascript">
         function uploadFile() {
             $('#sbm_btn').removeAttr('disabled');
@@ -16,15 +31,18 @@
 
 <body>
 <div class="container">
-    <h1>MSBA7011 Final Project</h1>
+    <h1>MSBA7011</h1>
+    <h1>Final Project</h1>
     <h2>Are you a star?</h2>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-{#        <input type="file" name="image">#}
-        <button type="button" onclick="$('#upfile').click();" class="btn btn-default">Upload Selfie</button>
-        <input type="file" id="upfile" onchange="uploadFile()" name="image"  style="visibility: hidden; position: absolute;">
-        <br>
-        <button class="btn btn-primary" type="submit" disabled="disabled" style="margin-top: 10px;" id="sbm_btn">FIND IT OUT</button>
-    </form>
+    <div class="center">
+        <form action="/upload" method="post" enctype="multipart/form-data">
+    {#        <input type="file" name="image">#}
+            <button type="button" onclick="$('#upfile').click();" class="btn btn-default btn-lg">Upload Selfie</button>
+            <input type="file" id="upfile" onchange="uploadFile()" name="image"  style="visibility: hidden; position: absolute;">
+            <br>
+            <button class="btn btn-primary btn-lg" type="submit" disabled="disabled" style="margin-top: 10px;" id="sbm_btn">FIND IT OUT</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>
