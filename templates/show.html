@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+</head>
+<body>
+    <!-- Show image -->
+    <img style="width:180px" src="{{ url_for('static', filename=img_path) }}">
+    <!-- Show labels -->
+    {% for label in pred %}
+    <p>{{ label['label'] }}:{{ label['prob'] }}</p>
+    {% endfor %}
+</body>
+</html>
