@@ -4,7 +4,6 @@ import json
 import pickle
 import time
 import cv2
-import dlib
 import numpy as np
 from flask import Flask, render_template, request, g
 from tensorflow.python.keras.models import load_model
@@ -31,49 +30,28 @@ def loadModel():
     global graph
     graph = tf.get_default_graph()
 
-    # initialize cnn based face detector with the weights
-    global cnn_face_detector
-    cnn_face_detector = dlib.cnn_face_detection_model_v1('mmod_human_face_detector.dat')
+    global net
+    prototxt = 'deploy.prototxt.txt'
+    model = 'res10_300x300_ssd_iter_140000.caffemodel'
+    # load our serialized model from disk
+    net = cv2.dnn.readNetFromCaffe(prototxt, model)
 
 
-def extractFaceCor(image, reduce=None):
+def extractFaceCor2(image):
     """
-    Extract face coordinates, using CNN
+    Extract Face Coordinates using opencv and dnn
     :param image:
-    :param reduce:
     :return:
     """
-    print('[INFO] Extracting face from image')
-    origin_image = image
-    dim = 0
-    if not reduce:
-        height, width, depth = image.shape
-        image = cv2.pyrDown(image)
-        dim +=1
-        if height * width > 8e6:
-            image = cv2.pyrDown(image)
-            dim += 1
-    else:
-        for i in range(int(reduce)):
-            image = cv2.pyrDown(image)
-            dim += 1
-
-    faces = cnn_face_detector(image, 1)
-    if len(faces) == 0:
-        cor = extractFaceCor(origin_image, dim-1)
-    else:
-        face_dict = {'lst': []}
-        expand_perc = dim * 2
-        for face in faces:
-            x = face.rect.left()
-            y = face.rect.top()
-            w = face.rect.right() - x
-            h = face.rect.bottom() - y
-            face_dict['lst'].append(w * h)
-            face_dict[w * h] = {'cor': [x * expand_perc, y * expand_perc, w * expand_perc, h * expand_perc]}
-
-        cor = face_dict[max(face_dict['lst'])]['cor']
-
+    print('[INFO] Using Opencv with DNN to Extract face')
+    (h, w) = image.shape[:2]
+    blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 1.0,
+                                 (300, 300), (104.0, 177.0, 123.0))
+    net.setInput(blob)
+    detections = net.forward()
+    box = detections[0, 0, 0, 3:7] * np.array([w, h, w, h])
+    (startX, startY, endX, endY) = box.astype("int")
+    cor = [startX, startY, endX-startX, endY-startY]
     return cor
 
 
@@ -100,7 +78,7 @@ def upload():
     output = image.copy()
 
     # Extract face from image
-    cor = extractFaceCor(image)
+    cor = extractFaceCor2(image)
     face = image[cor[1]:cor[1] + cor[3], cor[0]:cor[0] + cor[2]]
     cv2.imwrite('face.jpg', face)
     print('[INFO] Face extracted success!', cor)
