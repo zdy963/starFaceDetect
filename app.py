@@ -13,8 +13,8 @@ import tensorflow as tf
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-modelpath = 'fullset.model'
-labelpath = 'fullset.lb'
+modelpath = 'fullset02.model'
+labelpath = 'fullset02.lb'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'JPG', 'PNG'])
 
 with open('config.json') as config:
