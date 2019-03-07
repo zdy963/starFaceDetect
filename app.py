@@ -84,10 +84,12 @@ def upload():
         # Copy an output
         output = image.copy()
 
+        # Extract face from image
+        cor = extractFaceCor2(image)
+
+        face = image[cor[1]:cor[1] + cor[3], cor[0]:cor[0] + cor[2]]
+
         try:
-            # Extract face from image
-            cor = extractFaceCor2(image)
-            face = image[cor[1]:cor[1] + cor[3], cor[0]:cor[0] + cor[2]]
             cv2.imwrite('face.jpg', face)
             print('[INFO] Face extracted success!', cor)
 
@@ -95,6 +97,7 @@ def upload():
             print('[INFO] Resizing face image')
             # face = cv2.resize(face, (224, 224))
             face = cv2.resize(face, (128, 128))
+
             face = face.astype("float") / 255.0
             face = img_to_array(face)
             face = np.expand_dims(face, axis=0)
@@ -104,32 +107,35 @@ def upload():
             model = load_model(modelpath)
             # with graph.as_default():
             proba = model.predict(face, verbose=1)[0]
-            print(proba)
+            # print(proba)
 
             # Get similar stars name and percentage
             labels = []
             for i in range(3):
                 # print(i)
                 idx = np.argmax(proba)
-                print(idx)
+                # print(idx)
                 curr_prob = proba[idx]
                 proba[idx] = 0
                 label = lb.classes_[idx]
 
                 # build the label and draw the label on the image
-                result = {'label': label, 'prob': '%.2f' % (curr_prob*100) + '%'}
+                result = {'label': label, 'prob': '%.2f' % (curr_prob * 100) + '%'}
                 labels.append(result)
 
             # Decode image
             curr_time = str(time.time())
             randomNum = random.randint(0, 100)  # 生成的随机整数n，其中0<=n<=100
             uniqueName = 'img/' + curr_time + str(randomNum) + '.jpg'
-            cv2.imwrite('static/'+uniqueName, output)
+            cv2.imwrite('static/' + uniqueName, output)
 
             # Return data to front-end
             return render_template('show.html', img_path=uniqueName, pred=labels)
-        except:
+
+        except cv2.error:
             return render_template('alertInfo.html', text='Please try another image', redirectTo='/')
+
+
 
     else:
         return render_template('alertInfo.html', text='Please submit image', redirectTo='/')
